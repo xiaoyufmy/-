@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .login{
+            background: #b766ef;
+        }
+        .register{
+            background: #ffd730;
+        }
+    </style>
+</head>
+<body ng-app="test">
+
+<div btn></div>   <!-- 以属性形式使用 -->
+
+<div class="btn" mystyle="register"></div>    <!-- 以类样式形式使用 -->
+
+<btn mystyle="login">点击</btn> <!-- 以自定义标签形式使用 -->
+
+<!-- directive:btn --> <!-- 以注释形式使用  注释两边一定要留空格，不然什么都不会发生 -->
+
+<script src="libs/angular.js"></script>
+
+<script id="tem" type="text/ng-template">
+    <div>
+        <p>{{msg}}</p>
+        <button ng-transclude class="{{mystyle}}">kjhkjsdfsdf</button>
+    </div>
+
+</script>
+
+<script>
+    //创建模块对象
+    var test = angular.module("test",[]);
+
+    // 创建自定义指令
+    // 第一个参数：是指令的名字,必须是驼峰命名法   使用时把大写改成小写，在原来大写前加上-  myBtn --> my-btn
+    // 第二个参数：和控制器的第二个参数类似!
+    test.directive("btn",[function () {
+        return { // 在这里直接return 一个对象就可以了
+            //template:"<button>按钮</button>"  //提供字符串，对应的内容会被添加到自定义指令所在位置
+
+            //templateUrl: "01.template.html"  // 值可以是一个html文件所在位置
+
+            templateUrl:"tem",//值也可以是一个script标签的id
+
+            restrict:"MECA", // A: Attribute  C:Class   E: Element   M：comment/Mark  限制自定义指令的使用形式
+
+            replace:true, // 默认false, 为true时，模板会被用来替换自定义指令所在标签， 否则是插入到自定义指令中间
+
+            transclude:true, // 默认false, 为true时会将自定义标签中的内容插入到模板中，拥有ng-transclude 指令的标签中间
+
+            scope:{
+                // @开头，表示要获取自定义指令属性的值,
+                // 给当前对象添加一个属性(如:tmp),属性值以@开头，后面跟上自定义指令的属性名
+                // 在对应的模板可以直接使用{{tmp}} 来得到mystyle对应的值
+
+                //tmp:"@mystyle",
+
+                mystyle:"@"// 这是上一行的简写形式  在对应的模板可以直接使用{{mystyle}} 来得到mystyle对应的值
+            },
+            link: function (scope,element,attributes) {//需要一个function 这是function在angular解析到相应指令时就会执行一次
+
+                scope.msg = "测试测试"; //类似于控制器时里的$scope,但是这里的scope属性值是在模板中使用的.
+
+                element.on('click', function () {//指向模板最外层的对象  如果replace为treu,指向的就是自定义指令所在标签
+                    alert("点击了");
+                });
+
+                console.log(attributes);//这个对象里的属性就是自定义指令所在标签的属性
+            }
+        }
+    }])
+</script>
+</body>
+</html>
