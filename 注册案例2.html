@@ -96,7 +96,7 @@
                 if($scope.isagree === true && $scope.usertype != ""){
                     $scope.msg = "注册成功！";
                 }else{
-                    sessionStorage.clear();
+                    localStorage.clear();
                     $scope.msg = "注册失败！";
                 }
             }else{
@@ -111,7 +111,7 @@
         this.type = type;
     }
     User.prototype.save = function () {
-        var str = sessionStorage.getItem("myuser")||"[]";
+        var str = localStorage.getItem("myuser")||"[]";
         var arr = JSON.parse(str);
         for(var i = 0; i < arr.length; i++){
             if(arr[i].name === this.name){
@@ -119,7 +119,7 @@
             }
         }
         arr.push({name:this.name,pwd:this.pwd,type:this.type});
-        sessionStorage.setItem("myuser",JSON.stringify(arr));
+        localStorage.setItem("myuser",JSON.stringify(arr));
         return true;
     }
 </script>
